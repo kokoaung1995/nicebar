@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "721424751464",
+    "project_id": "nicebar-f4412",
+    "storage_bucket": "nicebar-f4412.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:721424751464:android:091daceb5b8989731314dd",
+        "android_client_info": {
+          "package_name": "nice.bar.app.nicebar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "721424751464-ge1412a8ocerpe0kfspu993r3nd2js22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX0Xi8oo3oHNszStuu36Cn4XDA80BgNBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "721424751464-ge1412a8ocerpe0kfspu993r3nd2js22.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "721424751464-o4p2rvae9429v20ottit69mg90bkur5p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "nice.bar.app.nicebar"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
