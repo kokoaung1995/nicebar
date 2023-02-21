@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nicebar/Datail.dart';
-import 'package:nicebar/Product_model.dart';
+import 'package:provider/provider.dart';
+
+import 'Product_model.dart';
+import 'darkmoodtheme/darkmood.dart';
 
 class CategoryList extends StatefulWidget {
   const CategoryList({super.key});
@@ -23,7 +26,21 @@ class _CategoryListState extends State<CategoryList> {
     Stream<QuerySnapshot> categories =
         FirebaseFirestore.instance.collection("categories").snapshots();
     return Scaffold(
-        appBar: AppBar(title: Text("Home")),
+        appBar: AppBar(
+          title: Text("Home"),
+          actions: [
+            Switch(
+              value: context.watch<ThemeProvider>().isDarkTheme,
+              onChanged: (value) {
+                if (value) {
+                  context.read<ThemeProvider>().setDarkTheme();
+                } else {
+                  context.read<ThemeProvider>().setLightTheme();
+                }
+              },
+            )
+          ],
+        ),
         body: Stack(
           children: [
             Column(
@@ -33,11 +50,11 @@ class _CategoryListState extends State<CategoryList> {
                     builder:
                         ((context, AsyncSnapshot<QuerySnapshot> snapshots) {
                       if (snapshots.data == null) {
-                        return Center(
+                        return const Center(
                           child: Text("Data is loading"),
                         );
                       }
-                      return Container(
+                      return SizedBox(
                         height: 50,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -56,10 +73,10 @@ class _CategoryListState extends State<CategoryList> {
                                   });
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(
                                       "${snapshots.data!.docs[index]['name']}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 17,
                                           color: Colors.red)),
@@ -68,39 +85,42 @@ class _CategoryListState extends State<CategoryList> {
                             }),
                       );
                     })),
-                SingleChildScrollView(
-                    child: FutureBuilder(
-                  future: categoryProducts,
-                  builder: (context,
-                      AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                          snapshots) {
-                    if (snapshots.data == null) {
-                      return Center(
-                        child: Text("Data is loading"),
-                      );
-                    }
-                    return Container(
+                SizedBox(height: 20),
+                Expanded(
+                  child: SingleChildScrollView(
+                      child: FutureBuilder(
+                    future: categoryProducts,
+                    builder: (context,
+                        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                            snapshots) {
+                      if (snapshots.data == null) {
+                        return const Center(
+                          child: Text("Data is loading"),
+                        );
+                      }
+                      return Container(
                         height: 500,
-                        child: InkWell(
-                          onTap: () {
-                            Product product = Product(
-                                snapshots.data!.docs[index]['name'],
-                                snapshots.data!.docs[index]['price'],
-                                snapshots.data!.docs[index]['description'],
-                                snapshots.data!.docs[index]['img'],
-                                snapshots.data!.docs[index]['shop']);
-
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Datail(
-                                        snapshots.data!.docs[index].id,
-                                        product)));
-                          },
-                          child: ListView.builder(
-                              itemCount: snapshots.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return Container(
+                        child: ListView.builder(
+                            itemCount: snapshots.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () {
+                                  Product product = Product(
+                                      snapshots.data!.docs[index]['name'],
+                                      snapshots.data!.docs[index].id,
+                                      snapshots.data!.docs[index]['price'],
+                                      snapshots.data!.docs[index]
+                                          ['description'],
+                                      snapshots.data!.docs[index]['img'],
+                                      snapshots.data!.docs[index]['shop']);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Datail(
+                                              snapshots.data!.docs[index].id,
+                                              product)));
+                                },
+                                child: Container(
                                     margin: EdgeInsets.only(
                                         left: 20,
                                         top: 20,
@@ -142,16 +162,18 @@ class _CategoryListState extends State<CategoryList> {
                                           Container(
                                             child: Image.network(
                                               "${snapshots.data!.docs[index]['img']}",
-                                              height: 120,
+                                              scale: 1.1,
                                             ),
                                           )
                                         ],
                                       ),
-                                    ));
-                              }),
-                        ));
-                  },
-                ))
+                                    )),
+                              );
+                            }),
+                      );
+                    },
+                  )),
+                ),
               ],
             ),
           ],
